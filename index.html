@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern & Minimalist Web Sayfası</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --text-color: #2c3e50;
+            --accent-color: #3498db;
+            --accent-hover: #2980b9;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--text-color);
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #95a5a6;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Hoş Geldiniz</h1>
+            <p class="subtitle">Sizin için hazırlanmış şık ve modern bir HTML şablonu.</p>
+        </header>
+
+        <section id="about">
+            <h2>Hakkında</h2>
+            <p>Bu dosya, temiz bir kod yapısına ve modern minimalist bir tasarıma sahip örnek bir <code>index.html</code> sayfasıdır.</p>
+        </section>
+
+        <section id="features">
+            <h2>Özellikler</h2>
+            <p>Sayfa tamamen duyarlı (responsive) olarak tasarlanmıştır. Mobil cihazlarda, tabletlerde ve masaüstü ekranlarda kusursuz bir şekilde görüntülenir.</p>
+        </section>
+
+        <section id="action" style="text-align: center; margin-top: 40px;">
+            <a href="#" class="btn">Daha Fazla Bilgi</a>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 Tüm Hakları Saklıdır.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
