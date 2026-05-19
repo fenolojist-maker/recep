@@ -1,0 +1,147 @@
+<!-- PDF.js Kütüphanesi -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+
+<style>
+    .pdf-viewer-wrapper {
+        font-family: Arial, sans-serif;
+        background-color: #525659;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        min-height: 500px;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+    .toolbar {
+        position: sticky;
+        top: 0;
+        height: 40px;
+        background-color: #323639;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    .toolbar button {
+        background-color: #444;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 3px;
+    }
+    .toolbar button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    #pdf-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 20px 0;
+    }
+    #pdf-canvas {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        background-color: white;
+        max-width: 100%;
+    }
+</style>
+
+<div class="pdf-viewer-wrapper" oncontextmenu="return false;">
+    <div class="toolbar">
+        <button id="prev-page">Önceki</button>
+        <span>Sayfa: <span id="page-num">0</span> / <span id="page-count">0</span></span>
+        <button id="next-page">Sonraki</button>
+    </div>
+    <div id="pdf-container">
+        <canvas id="pdf-canvas"></canvas>
+    </div>
+</div>
+
+<script>
+    // ####################################################################################
+    // ADIM 1'DE SİTEDEN KOPYALADIĞINIZ O UZUN METNİ (BASE64) AŞAĞIDAKİ TEK TIRNAKLARIN İÇİNE YAPIŞTIRIN.
+    // ÖRNEK: const pdfData = 'JVBERi0xLjQKJgY0...';
+    // ####################################################################################
+    
+    const pdfData = 'BURAYA_KOPYALADIGINIZ_BASE64_METNINI_YAPISTIRIN';
+    
+    // ####################################################################################
+
+    // Metni PDF.js'in okuyabileceği bir binary (ikili) veriye dönüştürüyoruz
+    const pdfAsili = atob(pdfData);
+
+    let pdfDoc = null,
+        pageNum = 1,
+        pageRendering = false,
+        pageNumPending = null,
+        scale = 1.5, 
+        canvas = document.getElementById('pdf-canvas'),
+        ctx = canvas.getContext('2d');
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+
+    function renderPage(num) {
+        pageRendering = true;
+        pdfDoc.getPage(num).then(function(page) {
+            const viewport = page.getViewport({scale: scale});
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+            const renderTask = page.render(renderContext);
+
+            renderTask.promise.then(function() {
+                pageRendering = false;
+                if (pageNumPending !== null) {
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                }
+            });
+        });
+        document.getElementById('page-num').textContent = num;
+    }
+
+    function queueRenderPage(num) {
+        if (pageRendering) {
+            pageNumPending = num;
+        } else {
+            renderPage(num);
+        }
+    }
+
+    document.getElementById('prev-page').addEventListener('click', function() {
+        if (pageNum <= 1) return;
+        pageNum--;
+        queueRenderPage(pageNum);
+    });
+
+    document.getElementById('next-page').addEventListener('click', function() {
+        if (pageNum >= pdfDoc.numPages) return;
+        pageNum++;
+        queueRenderPage(pageNum);
+    });
+
+    // Bu kez dışarıdan link çağırmıyoruz, doğrudan hafızadaki metni (data) yüklüyoruz
+    pdfjsLib.getDocument({data: pdfAsili}).promise.then(function(pdfDoc_) {
+        pdfDoc = pdfDoc_;
+        document.getElementById('page-count').textContent = pdfDoc.numPages;
+        renderPage(pageNum);
+    }).catch(function(error) {
+        console.error('PDF yüklenirken hata oluştu: ', error);
+        alert('Doküman yüklenemedi. Kodun içine yapıştırdığınız metni kontrol edin.');
+    });
+
+    window.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 's' || e.key === 'u')) {
+            e.preventDefault();
+        }
+    });
+</script>
